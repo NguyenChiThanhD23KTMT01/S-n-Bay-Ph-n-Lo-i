@@ -1,0 +1,1565 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/L.Control.Layers.Tree.css">
+        <link rel="stylesheet" href="css/qgis2web.css">
+        <link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/filter.css">
+<link rel="stylesheet" href="css/nouislider.min.css">
+        <link rel="stylesheet" href="css/leaflet-control-geocoder.Geocoder.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title>Vị trí sân bay do Nguyễn Chí Thành thực hiện năm 2025</title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/L.Control.Layers.Tree.min.js"></script>
+        <script src="js/multi-style-layer.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/leaflet-control-geocoder.Geocoder.js"></script>
+        <script src="js/tailDT.js"></script>
+<script src="js/nouislider.min.js"></script>
+<script src="js/wNumb.js"></script>
+        <script src="data/Snbaytheophnloi_1.js"></script>
+        <script>
+        var highlightLayer;
+        function highlightFeature(e) {
+            highlightLayer = e.target;
+
+            if (e.target.feature.geometry.type === 'LineString' || e.target.feature.geometry.type === 'MultiLineString') {
+              highlightLayer.setStyle({
+                color: '#ffff00',
+              });
+            } else {
+              highlightLayer.setStyle({
+                fillColor: '#ffff00',
+                fillOpacity: 1
+              });
+            }
+        }
+        var map = L.map('map', {
+            zoomControl:false, maxZoom:28, minZoom:1
+        }).fitBounds([[-152.2632155989142,-230.63786564793088],[134.77649961557967,141.40976522623998]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        // remove popup's row if "visible-with-data"
+        function removeEmptyRowsFromPopupContent(content, feature) {
+         var tempDiv = document.createElement('div');
+         tempDiv.innerHTML = content;
+         var rows = tempDiv.querySelectorAll('tr');
+         for (var i = 0; i < rows.length; i++) {
+             var td = rows[i].querySelector('td.visible-with-data');
+             var key = td ? td.id : '';
+             if (td && td.classList.contains('visible-with-data') && feature.properties[key] == null) {
+                 rows[i].parentNode.removeChild(rows[i]);
+             }
+         }
+         return tempDiv.innerHTML;
+        }
+        // add class to format popup if it contains media
+		function addClassToPopupIfMedia(content, popup) {
+			var tempDiv = document.createElement('div');
+			tempDiv.innerHTML = content;
+			if (tempDiv.querySelector('td img')) {
+				popup._contentNode.classList.add('media');
+					// Delay to force the redraw
+					setTimeout(function() {
+						popup.update();
+					}, 10);
+			} else {
+				popup._contentNode.classList.remove('media');
+			}
+		}
+        var title = new L.Control({'position':'bottomright'});
+        title.onAdd = function (map) {
+            this._div = L.DomUtil.create('div', 'info');
+            this.update();
+            return this._div;
+        };
+        title.update = function () {
+            this._div.innerHTML = '<h2>Vị trí sân bay do Nguyễn Chí Thành thực hiện năm 2025</h2>';
+        };
+        title.addTo(map);
+        var zoomControl = L.control.zoom({
+            position: 'topleft'
+        }).addTo(map);
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+        }
+        map.createPane('pane_GoogleSatellite_0');
+        map.getPane('pane_GoogleSatellite_0').style.zIndex = 400;
+        var layer_GoogleSatellite_0 = L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+            pane: 'pane_GoogleSatellite_0',
+            opacity: 1.0,
+            attribution: '<a href="https://www.google.at/permissions/geoguidelines/attr-guide.html">Map data ©2015 Google</a>',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 20
+        });
+        layer_GoogleSatellite_0;
+        map.addLayer(layer_GoogleSatellite_0);
+        function pop_Snbaytheophnloi_1(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (var i in e.target._eventParents) {
+                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
+                            e.target._eventParents[i].resetStyle(e.target);
+                        }
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Xếp hạng than đo</th>\
+                        <td>' + (feature.properties['scalerank'] !== null ? autolinker.link(String(feature.properties['scalerank']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Phân loại</th>\
+                        <td>' + (feature.properties['type'] !== null ? autolinker.link(String(feature.properties['type']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">name</th>\
+                        <td>' + (feature.properties['name'] !== null ? autolinker.link(String(feature.properties['name']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Tên viết tắt</th>\
+                        <td>' + (feature.properties['abbrev'] !== null ? autolinker.link(String(feature.properties['abbrev']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Vị trí</th>\
+                        <td>' + (feature.properties['location'] !== null ? autolinker.link(String(feature.properties['location']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">gps_code</th>\
+                        <td>' + (feature.properties['gps_code'] !== null ? autolinker.link(String(feature.properties['gps_code']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Mã sân bay</th>\
+                        <td>' + (feature.properties['iata_code'] !== null ? autolinker.link(String(feature.properties['iata_code']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Than đo tự nhiên</th>\
+                        <td>' + (feature.properties['natlscale'] !== null ? autolinker.link(String(feature.properties['natlscale']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row"> Tên Ả rập</th>\
+                        <td>' + (feature.properties['name_ar'] !== null ? autolinker.link(String(feature.properties['name_ar']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Tên tiếng Hàn</th>\
+                        <td>' + (feature.properties['name_ko'] !== null ? autolinker.link(String(feature.properties['name_ko']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Tên tiếng Trung</th>\
+                        <td>' + (feature.properties['name_zh'] !== null ? autolinker.link(String(feature.properties['name_zh']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Điểm</th>\
+                        <td>' + (feature.properties['wdid_score'] !== null ? autolinker.link(String(feature.properties['wdid_score']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_Snbaytheophnloi_1_0(feature) {
+            switch(String(feature.properties['type'])) {
+                case 'major':
+                    return {
+                pane: 'pane_Snbaytheophnloi_1',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/Snbaytheophnloi_1.svg',
+            iconSize: [32.68, 32.68]
+        }),
+                interactive: true,
+            }
+                    break;
+                case 'major and military':
+                    return {
+                pane: 'pane_Snbaytheophnloi_1',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/Snbaytheophnloi_1.svg',
+            iconSize: [32.68, 32.68]
+        }),
+                interactive: true,
+            }
+                    break;
+                case 'mid':
+                    return {
+                pane: 'pane_Snbaytheophnloi_1',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/Snbaytheophnloi_1.svg',
+            iconSize: [32.68, 32.68]
+        }),
+                interactive: true,
+            }
+                    break;
+                case 'mid and military':
+                    return {
+                pane: 'pane_Snbaytheophnloi_1',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/Snbaytheophnloi_1.svg',
+            iconSize: [32.68, 32.68]
+        }),
+                interactive: true,
+            }
+                    break;
+                case 'military':
+                    return {
+                pane: 'pane_Snbaytheophnloi_1',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/Snbaytheophnloi_1.svg',
+            iconSize: [32.68, 32.68]
+        }),
+                interactive: true,
+            }
+                    break;
+                case 'military major':
+                    return {
+                pane: 'pane_Snbaytheophnloi_1',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/Snbaytheophnloi_1.svg',
+            iconSize: [32.68, 32.68]
+        }),
+                interactive: true,
+            }
+                    break;
+                case 'military mid':
+                    return {
+                pane: 'pane_Snbaytheophnloi_1',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/Snbaytheophnloi_1.svg',
+            iconSize: [32.68, 32.68]
+        }),
+                interactive: true,
+            }
+                    break;
+                case 'small':
+                    return {
+                pane: 'pane_Snbaytheophnloi_1',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/Snbaytheophnloi_1.svg',
+            iconSize: [32.68, 32.68]
+        }),
+                interactive: true,
+            }
+                    break;
+                case 'spaceport':
+                    return {
+                pane: 'pane_Snbaytheophnloi_1',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/Snbaytheophnloi_1.svg',
+            iconSize: [32.68, 32.68]
+        }),
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        function style_Snbaytheophnloi_1_1(feature) {
+            switch(String(feature.properties['type'])) {
+                case 'major':
+                    return {
+                pane: 'pane_Snbaytheophnloi_1',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/Snbaytheophnloi_1.svg',
+            iconSize: [32.68, 32.68]
+        }),
+                interactive: true,
+            }
+                    break;
+                case 'major and military':
+                    return {
+                pane: 'pane_Snbaytheophnloi_1',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/Snbaytheophnloi_1.svg',
+            iconSize: [32.68, 32.68]
+        }),
+                interactive: true,
+            }
+                    break;
+                case 'mid':
+                    return {
+                pane: 'pane_Snbaytheophnloi_1',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/Snbaytheophnloi_1.svg',
+            iconSize: [32.68, 32.68]
+        }),
+                interactive: true,
+            }
+                    break;
+                case 'mid and military':
+                    return {
+                pane: 'pane_Snbaytheophnloi_1',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/Snbaytheophnloi_1.svg',
+            iconSize: [32.68, 32.68]
+        }),
+                interactive: true,
+            }
+                    break;
+                case 'military':
+                    return {
+                pane: 'pane_Snbaytheophnloi_1',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/Snbaytheophnloi_1.svg',
+            iconSize: [32.68, 32.68]
+        }),
+                interactive: true,
+            }
+                    break;
+                case 'military major':
+                    return {
+                pane: 'pane_Snbaytheophnloi_1',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/Snbaytheophnloi_1.svg',
+            iconSize: [32.68, 32.68]
+        }),
+                interactive: true,
+            }
+                    break;
+                case 'military mid':
+                    return {
+                pane: 'pane_Snbaytheophnloi_1',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/Snbaytheophnloi_1.svg',
+            iconSize: [32.68, 32.68]
+        }),
+                interactive: true,
+            }
+                    break;
+                case 'small':
+                    return {
+                pane: 'pane_Snbaytheophnloi_1',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/Snbaytheophnloi_1.svg',
+            iconSize: [32.68, 32.68]
+        }),
+                interactive: true,
+            }
+                    break;
+                case 'spaceport':
+                    return {
+                pane: 'pane_Snbaytheophnloi_1',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/Snbaytheophnloi_1.svg',
+            iconSize: [32.68, 32.68]
+        }),
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_Snbaytheophnloi_1');
+        map.getPane('pane_Snbaytheophnloi_1').style.zIndex = 401;
+        map.getPane('pane_Snbaytheophnloi_1').style['mix-blend-mode'] = 'normal';
+        var layer_Snbaytheophnloi_1 = new L.geoJson.multiStyle(json_Snbaytheophnloi_1, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Snbaytheophnloi_1',
+            layerName: 'layer_Snbaytheophnloi_1',
+            pane: 'pane_Snbaytheophnloi_1',
+            onEachFeature: pop_Snbaytheophnloi_1,
+            pointToLayers: [function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.marker(latlng, style_Snbaytheophnloi_1_0(feature));
+            },function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.marker(latlng, style_Snbaytheophnloi_1_1(feature));
+            },
+        ]});
+        bounds_group.addLayer(layer_Snbaytheophnloi_1);
+        map.addLayer(layer_Snbaytheophnloi_1);
+        var osmGeocoder = new L.Control.Geocoder({
+            collapsed: true,
+            position: 'topleft',
+            text: 'Search',
+            title: 'Testing'
+        }).addTo(map);
+        document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
+        .className += ' fa fa-search';
+        document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
+        .title += 'Search for a place';
+        var overlaysTree = [
+            {label: 'Sân bay theo phân loại<br /><table><tr><td style="text-align: center;"><img src="legend/Snbaytheophnloi_1_major0.png" /></td><td>major</td></tr><tr><td style="text-align: center;"><img src="legend/Snbaytheophnloi_1_majorandmilitary1.png" /></td><td>major and military</td></tr><tr><td style="text-align: center;"><img src="legend/Snbaytheophnloi_1_mid2.png" /></td><td>mid</td></tr><tr><td style="text-align: center;"><img src="legend/Snbaytheophnloi_1_midandmilitary3.png" /></td><td>mid and military</td></tr><tr><td style="text-align: center;"><img src="legend/Snbaytheophnloi_1_military4.png" /></td><td>military</td></tr><tr><td style="text-align: center;"><img src="legend/Snbaytheophnloi_1_militarymajor5.png" /></td><td>military major</td></tr><tr><td style="text-align: center;"><img src="legend/Snbaytheophnloi_1_militarymid6.png" /></td><td>military mid</td></tr><tr><td style="text-align: center;"><img src="legend/Snbaytheophnloi_1_small7.png" /></td><td>small</td></tr><tr><td style="text-align: center;"><img src="legend/Snbaytheophnloi_1_spaceport8.png" /></td><td>spaceport</td></tr></table>', layer: layer_Snbaytheophnloi_1},
+            {label: "Google Satellite", layer: layer_GoogleSatellite_0},]
+        var lay = L.control.layers.tree(null, overlaysTree,{
+            //namedToggle: true,
+            //selectorBack: false,
+            //closedSymbol: '&#8862; &#x1f5c0;',
+            //openedSymbol: '&#8863; &#x1f5c1;',
+            //collapseAll: 'Collapse all',
+            //expandAll: 'Expand all',
+            collapsed: true,
+        });
+        lay.addTo(map);
+        setBounds();
+        var mapDiv = document.getElementById('map');
+        var row = document.createElement('div');
+        row.className="row";
+        row.id="all";
+        row.style.height = "100%";
+        var col1 = document.createElement('div');
+        col1.className="col9";
+        col1.id = "mapWindow";
+        col1.style.height = "99%";
+        col1.style.width = "80%";
+        col1.style.display = "inline-block";
+        var col2 = document.createElement('div');
+        col2.className="col3";
+        col2.id = "menu";
+        col2.style.display = "inline-block";
+        mapDiv.parentNode.insertBefore(row, mapDiv);
+        document.getElementById("all").appendChild(col1);
+        document.getElementById("all").appendChild(col2);
+        col1.appendChild(mapDiv)
+        var Filters = {"gps_code": "str","type": "str","location": "str"};
+        function filterFunc() {
+          map.eachLayer(function(lyr){
+          if ("options" in lyr && "dataVar" in lyr["options"]){
+            features = this[lyr["options"]["dataVar"]].features.slice(0);
+            try{
+              for (key in Filters){
+                keyS = key.replace(/[^a-zA-Z0-9_]/g, "")
+                if (Filters[key] == "str" || Filters[key] == "bool"){
+                  var selection = [];
+                  var options = document.getElementById("sel_" + keyS).options
+                  for (var i=0; i < options.length; i++) {
+                    if (options[i].selected) selection.push(options[i].value);
+                  }
+                    try{
+                      if (key in features[0].properties){
+                        for (i = features.length - 1;
+                          i >= 0; --i){
+                          if (selection.indexOf(
+                          features[i].properties[key])<0
+                          && selection.length>0) {
+                          features.splice(i,1);
+                          }
+                        }
+                      }
+                    } catch(err){
+                  }
+                }
+                if (Filters[key] == "int"){
+                  sliderVals =  document.getElementById(
+                    "div_" + keyS).noUiSlider.get();
+                  try{
+                    if (key in features[0].properties){
+                    for (i = features.length - 1; i >= 0; --i){
+                      if (parseInt(features[i].properties[key])
+                          < sliderVals[0]
+                          || parseInt(features[i].properties[key])
+                          > sliderVals[1]){
+                            features.splice(i,1);
+                          }
+                        }
+                      }
+                    } catch(err){
+                    }
+                  }
+                if (Filters[key] == "real"){
+                  sliderVals =  document.getElementById(
+                    "div_" + keyS).noUiSlider.get();
+                  try{
+                    if (key in features[0].properties){
+                    for (i = features.length - 1; i >= 0; --i){
+                      if (features[i].properties[key]
+                          < sliderVals[0]
+                          || features[i].properties[key]
+                          > sliderVals[1]){
+                            features.splice(i,1);
+                          }
+                        }
+                      }
+                    } catch(err){
+                    }
+                  }
+                if (Filters[key] == "date"
+                  || Filters[key] == "datetime"
+                  || Filters[key] == "time"){
+                  try{
+                    if (key in features[0].properties){
+                      HTMLkey = key.replace(/[&\/\\#,+()$~%.'":*?<>{} ]/g, '');
+                      startdate = document.getElementById("dat_" +
+                        HTMLkey + "_date1").value.replace(" ", "T");
+                      enddate = document.getElementById("dat_" +
+                        HTMLkey + "_date2").value.replace(" ", "T");
+                      for (i = features.length - 1; i >= 0; --i){
+                        if (features[i].properties[key] < startdate
+                          || features[i].properties[key] > enddate){
+                          features.splice(i,1);
+                        }
+                      }
+                    }
+                  } catch(err){
+                  }
+                }
+              }
+            } catch(err){
+            }
+          this[lyr["options"]["layerName"]].clearLayers();
+          this[lyr["options"]["layerName"]].addData(features);
+          }
+          })
+        }
+            document.getElementById("menu").appendChild(
+                document.createElement("div"));
+            var div_gps_code = document.createElement('div');
+            div_gps_code.id = "div_gps_code";
+            div_gps_code.className= "filterselect";
+            document.getElementById("menu").appendChild(div_gps_code);
+            sel_gps_code = document.createElement('select');
+            sel_gps_code.multiple = true;
+            sel_gps_code.size = 10;
+            sel_gps_code.id = "sel_gps_code";
+            var gps_code_options_str = "<option value='' unselected></option>";
+            sel_gps_code.onchange = function(){filterFunc()};
+            gps_code_options_str  += '<option value="ANYN">ANYN</option>';
+            gps_code_options_str  += '<option value="AYPY">AYPY</option>';
+            gps_code_options_str  += '<option value="AYWK">AYWK</option>';
+            gps_code_options_str  += '<option value="BGBW">BGBW</option>';
+            gps_code_options_str  += '<option value="BGSF">BGSF</option>';
+            gps_code_options_str  += '<option value="BIRK">BIRK</option>';
+            gps_code_options_str  += '<option value="BKPR">BKPR</option>';
+            gps_code_options_str  += '<option value="CYAM">CYAM</option>';
+            gps_code_options_str  += '<option value="CYBR">CYBR</option>';
+            gps_code_options_str  += '<option value="CYDQ">CYDQ</option>';
+            gps_code_options_str  += '<option value="CYED">CYED</option>';
+            gps_code_options_str  += '<option value="CYEG">CYEG</option>';
+            gps_code_options_str  += '<option value="CYFB">CYFB</option>';
+            gps_code_options_str  += '<option value="CYHM">CYHM</option>';
+            gps_code_options_str  += '<option value="CYHZ">CYHZ</option>';
+            gps_code_options_str  += '<option value="CYKA">CYKA</option>';
+            gps_code_options_str  += '<option value="CYMM">CYMM</option>';
+            gps_code_options_str  += '<option value="CYMX">CYMX</option>';
+            gps_code_options_str  += '<option value="CYOW">CYOW</option>';
+            gps_code_options_str  += '<option value="CYPE">CYPE</option>';
+            gps_code_options_str  += '<option value="CYPR">CYPR</option>';
+            gps_code_options_str  += '<option value="CYQB">CYQB</option>';
+            gps_code_options_str  += '<option value="CYQG">CYQG</option>';
+            gps_code_options_str  += '<option value="CYQM">CYQM</option>';
+            gps_code_options_str  += '<option value="CYQR">CYQR</option>';
+            gps_code_options_str  += '<option value="CYQT">CYQT</option>';
+            gps_code_options_str  += '<option value="CYQX">CYQX</option>';
+            gps_code_options_str  += '<option value="CYQY">CYQY</option>';
+            gps_code_options_str  += '<option value="CYRB">CYRB</option>';
+            gps_code_options_str  += '<option value="CYSB">CYSB</option>';
+            gps_code_options_str  += '<option value="CYSJ">CYSJ</option>';
+            gps_code_options_str  += '<option value="CYSM">CYSM</option>';
+            gps_code_options_str  += '<option value="CYTH">CYTH</option>';
+            gps_code_options_str  += '<option value="CYTS">CYTS</option>';
+            gps_code_options_str  += '<option value="CYUL">CYUL</option>';
+            gps_code_options_str  += '<option value="CYUT">CYUT</option>';
+            gps_code_options_str  += '<option value="CYVP">CYVP</option>';
+            gps_code_options_str  += '<option value="CYVR">CYVR</option>';
+            gps_code_options_str  += '<option value="CYWG">CYWG</option>';
+            gps_code_options_str  += '<option value="CYWK">CYWK</option>';
+            gps_code_options_str  += '<option value="CYXD">CYXD</option>';
+            gps_code_options_str  += '<option value="CYXE">CYXE</option>';
+            gps_code_options_str  += '<option value="CYXJ">CYXJ</option>';
+            gps_code_options_str  += '<option value="CYXS">CYXS</option>';
+            gps_code_options_str  += '<option value="CYXY">CYXY</option>';
+            gps_code_options_str  += '<option value="CYYB">CYYB</option>';
+            gps_code_options_str  += '<option value="CYYC">CYYC</option>';
+            gps_code_options_str  += '<option value="CYYG">CYYG</option>';
+            gps_code_options_str  += '<option value="CYYJ">CYYJ</option>';
+            gps_code_options_str  += '<option value="CYYQ">CYYQ</option>';
+            gps_code_options_str  += '<option value="CYYT">CYYT</option>';
+            gps_code_options_str  += '<option value="CYYZ">CYYZ</option>';
+            gps_code_options_str  += '<option value="CYZF">CYZF</option>';
+            gps_code_options_str  += '<option value="DAAG">DAAG</option>';
+            gps_code_options_str  += '<option value="DABC">DABC</option>';
+            gps_code_options_str  += '<option value="DAOO">DAOO</option>';
+            gps_code_options_str  += '<option value="DBBB">DBBB</option>';
+            gps_code_options_str  += '<option value="DFFD">DFFD</option>';
+            gps_code_options_str  += '<option value="DGAA">DGAA</option>';
+            gps_code_options_str  += '<option value="DGSI">DGSI</option>';
+            gps_code_options_str  += '<option value="DIAP">DIAP</option>';
+            gps_code_options_str  += '<option value="DIBK">DIBK</option>';
+            gps_code_options_str  += '<option value="DNAA">DNAA</option>';
+            gps_code_options_str  += '<option value="DNBE">DNBE</option>';
+            gps_code_options_str  += '<option value="DNIB">DNIB</option>';
+            gps_code_options_str  += '<option value="DNIL">DNIL</option>';
+            gps_code_options_str  += '<option value="DNKA">DNKA</option>';
+            gps_code_options_str  += '<option value="DNKN">DNKN</option>';
+            gps_code_options_str  += '<option value="DNMA">DNMA</option>';
+            gps_code_options_str  += '<option value="DNMM">DNMM</option>';
+            gps_code_options_str  += '<option value="DNPO">DNPO</option>';
+            gps_code_options_str  += '<option value="DNSO">DNSO</option>';
+            gps_code_options_str  += '<option value="DNZA">DNZA</option>';
+            gps_code_options_str  += '<option value="DRRN">DRRN</option>';
+            gps_code_options_str  += '<option value="DTMB">DTMB</option>';
+            gps_code_options_str  += '<option value="DTTA">DTTA</option>';
+            gps_code_options_str  += '<option value="DXXX">DXXX</option>';
+            gps_code_options_str  += '<option value="EBAW">EBAW</option>';
+            gps_code_options_str  += '<option value="EBBR">EBBR</option>';
+            gps_code_options_str  += '<option value="EBCI">EBCI</option>';
+            gps_code_options_str  += '<option value="EDDC">EDDC</option>';
+            gps_code_options_str  += '<option value="EDDF">EDDF</option>';
+            gps_code_options_str  += '<option value="EDDH">EDDH</option>';
+            gps_code_options_str  += '<option value="EDDK">EDDK</option>';
+            gps_code_options_str  += '<option value="EDDL">EDDL</option>';
+            gps_code_options_str  += '<option value="EDDM">EDDM</option>';
+            gps_code_options_str  += '<option value="EDDMf">EDDMf</option>';
+            gps_code_options_str  += '<option value="EDDN">EDDN</option>';
+            gps_code_options_str  += '<option value="EDDS">EDDS</option>';
+            gps_code_options_str  += '<option value="EDDT">EDDT</option>';
+            gps_code_options_str  += '<option value="EDDW">EDDW</option>';
+            gps_code_options_str  += '<option value="EETN">EETN</option>';
+            gps_code_options_str  += '<option value="EFHF">EFHF</option>';
+            gps_code_options_str  += '<option value="EFHK">EFHK</option>';
+            gps_code_options_str  += '<option value="EFOU">EFOU</option>';
+            gps_code_options_str  += '<option value="EFRO">EFRO</option>';
+            gps_code_options_str  += '<option value="EGAA">EGAA</option>';
+            gps_code_options_str  += '<option value="EGBB">EGBB</option>';
+            gps_code_options_str  += '<option value="EGCC">EGCC</option>';
+            gps_code_options_str  += '<option value="EGFF">EGFF</option>';
+            gps_code_options_str  += '<option value="EGGD">EGGD</option>';
+            gps_code_options_str  += '<option value="EGGP">EGGP</option>';
+            gps_code_options_str  += '<option value="EGGW">EGGW</option>';
+            gps_code_options_str  += '<option value="EGKK">EGKK</option>';
+            gps_code_options_str  += '<option value="EGLL">EGLL</option>';
+            gps_code_options_str  += '<option value="EGNM">EGNM</option>';
+            gps_code_options_str  += '<option value="EGNT">EGNT</option>';
+            gps_code_options_str  += '<option value="EGPA">EGPA</option>';
+            gps_code_options_str  += '<option value="EGPB">EGPB</option>';
+            gps_code_options_str  += '<option value="EGPE">EGPE</option>';
+            gps_code_options_str  += '<option value="EGPF">EGPF</option>';
+            gps_code_options_str  += '<option value="EGPH">EGPH</option>';
+            gps_code_options_str  += '<option value="EGPK">EGPK</option>';
+            gps_code_options_str  += '<option value="EHAM">EHAM</option>';
+            gps_code_options_str  += '<option value="EHRD">EHRD</option>';
+            gps_code_options_str  += '<option value="EICK">EICK</option>';
+            gps_code_options_str  += '<option value="EIDW">EIDW</option>';
+            gps_code_options_str  += '<option value="EINN">EINN</option>';
+            gps_code_options_str  += '<option value="EKCH">EKCH</option>';
+            gps_code_options_str  += '<option value="EKVG">EKVG</option>';
+            gps_code_options_str  += '<option value="ELLX">ELLX</option>';
+            gps_code_options_str  += '<option value="ENBR">ENBR</option>';
+            gps_code_options_str  += '<option value="ENGM">ENGM</option>';
+            gps_code_options_str  += '<option value="ENKR">ENKR</option>';
+            gps_code_options_str  += '<option value="ENSB">ENSB</option>';
+            gps_code_options_str  += '<option value="ENTC">ENTC</option>';
+            gps_code_options_str  += '<option value="ENVA">ENVA</option>';
+            gps_code_options_str  += '<option value="ENZV">ENZV</option>';
+            gps_code_options_str  += '<option value="EPGD">EPGD</option>';
+            gps_code_options_str  += '<option value="EPKK">EPKK</option>';
+            gps_code_options_str  += '<option value="EPLL">EPLL</option>';
+            gps_code_options_str  += '<option value="EPWA">EPWA</option>';
+            gps_code_options_str  += '<option value="ESGG">ESGG</option>';
+            gps_code_options_str  += '<option value="ESKN">ESKN</option>';
+            gps_code_options_str  += '<option value="ESNQ">ESNQ</option>';
+            gps_code_options_str  += '<option value="ESPA">ESPA</option>';
+            gps_code_options_str  += '<option value="ESSA">ESSA</option>';
+            gps_code_options_str  += '<option value="ESSB">ESSB</option>';
+            gps_code_options_str  += '<option value="ESSP">ESSP</option>';
+            gps_code_options_str  += '<option value="EVRA">EVRA</option>';
+            gps_code_options_str  += '<option value="EYPA">EYPA</option>';
+            gps_code_options_str  += '<option value="EYSA">EYSA</option>';
+            gps_code_options_str  += '<option value="EYVI">EYVI</option>';
+            gps_code_options_str  += '<option value="FACT">FACT</option>';
+            gps_code_options_str  += '<option value="FADN">FADN</option>';
+            gps_code_options_str  += '<option value="FAJS">FAJS</option>';
+            gps_code_options_str  += '<option value="FAPE">FAPE</option>';
+            gps_code_options_str  += '<option value="FAPP">FAPP</option>';
+            gps_code_options_str  += '<option value="FBSK">FBSK</option>';
+            gps_code_options_str  += '<option value="FEFF">FEFF</option>';
+            gps_code_options_str  += '<option value="FIMP">FIMP</option>';
+            gps_code_options_str  += '<option value="FKKR">FKKR</option>';
+            gps_code_options_str  += '<option value="FKYS">FKYS</option>';
+            gps_code_options_str  += '<option value="FLLS">FLLS</option>';
+            gps_code_options_str  += '<option value="FMCH">FMCH</option>';
+            gps_code_options_str  += '<option value="FMCZ">FMCZ</option>';
+            gps_code_options_str  += '<option value="FMMI">FMMI</option>';
+            gps_code_options_str  += '<option value="FNHU">FNHU</option>';
+            gps_code_options_str  += '<option value="FNLU">FNLU</option>';
+            gps_code_options_str  += '<option value="FOOL">FOOL</option>';
+            gps_code_options_str  += '<option value="FPST">FPST</option>';
+            gps_code_options_str  += '<option value="FQMA">FQMA</option>';
+            gps_code_options_str  += '<option value="FSIA">FSIA</option>';
+            gps_code_options_str  += '<option value="FTTJ">FTTJ</option>';
+            gps_code_options_str  += '<option value="FVBU">FVBU</option>';
+            gps_code_options_str  += '<option value="FVFA">FVFA</option>';
+            gps_code_options_str  += '<option value="FVHA">FVHA</option>';
+            gps_code_options_str  += '<option value="FWCL">FWCL</option>';
+            gps_code_options_str  += '<option value="FWKI">FWKI</option>';
+            gps_code_options_str  += '<option value="FXMM">FXMM</option>';
+            gps_code_options_str  += '<option value="FYWH">FYWH</option>';
+            gps_code_options_str  += '<option value="FZAA">FZAA</option>';
+            gps_code_options_str  += '<option value="FZIC">FZIC</option>';
+            gps_code_options_str  += '<option value="FZNA">FZNA</option>';
+            gps_code_options_str  += '<option value="FZQA">FZQA</option>';
+            gps_code_options_str  += '<option value="FZUA">FZUA</option>';
+            gps_code_options_str  += '<option value="FZWA">FZWA</option>';
+            gps_code_options_str  += '<option value="GABS">GABS</option>';
+            gps_code_options_str  += '<option value="GBYD">GBYD</option>';
+            gps_code_options_str  += '<option value="GCLP">GCLP</option>';
+            gps_code_options_str  += '<option value="GCXO">GCXO</option>';
+            gps_code_options_str  += '<option value="GFLL">GFLL</option>';
+            gps_code_options_str  += '<option value="GGOV">GGOV</option>';
+            gps_code_options_str  += '<option value="GLRB">GLRB</option>';
+            gps_code_options_str  += '<option value="GMFF">GMFF</option>';
+            gps_code_options_str  += '<option value="GMMC">GMMC</option>';
+            gps_code_options_str  += '<option value="GMMN">GMMN</option>';
+            gps_code_options_str  += '<option value="GMMX">GMMX</option>';
+            gps_code_options_str  += '<option value="GMMY">GMMY</option>';
+            gps_code_options_str  += '<option value="GMTT">GMTT</option>';
+            gps_code_options_str  += '<option value="GOOY">GOOY</option>';
+            gps_code_options_str  += '<option value="GQNN">GQNN</option>';
+            gps_code_options_str  += '<option value="GQPA">GQPA</option>';
+            gps_code_options_str  += '<option value="GQPP">GQPP</option>';
+            gps_code_options_str  += '<option value="GUCY">GUCY</option>';
+            gps_code_options_str  += '<option value="GVAC">GVAC</option>';
+            gps_code_options_str  += '<option value="GVNP">GVNP</option>';
+            gps_code_options_str  += '<option value="HAAB">HAAB</option>';
+            gps_code_options_str  += '<option value="HADR">HADR</option>';
+            gps_code_options_str  += '<option value="HBBA">HBBA</option>';
+            gps_code_options_str  += '<option value="HCMM">HCMM</option>';
+            gps_code_options_str  += '<option value="HDAM">HDAM</option>';
+            gps_code_options_str  += '<option value="HEAT">HEAT</option>';
+            gps_code_options_str  += '<option value="HEBA">HEBA</option>';
+            gps_code_options_str  += '<option value="HECA">HECA</option>';
+            gps_code_options_str  += '<option value="HEGN">HEGN</option>';
+            gps_code_options_str  += '<option value="HELX">HELX</option>';
+            gps_code_options_str  += '<option value="HESH">HESH</option>';
+            gps_code_options_str  += '<option value="HESN">HESN</option>';
+            gps_code_options_str  += '<option value="HETB">HETB</option>';
+            gps_code_options_str  += '<option value="HHAS">HHAS</option>';
+            gps_code_options_str  += '<option value="HKEL">HKEL</option>';
+            gps_code_options_str  += '<option value="HKJK">HKJK</option>';
+            gps_code_options_str  += '<option value="HKMO">HKMO</option>';
+            gps_code_options_str  += '<option value="HLLB">HLLB</option>';
+            gps_code_options_str  += '<option value="HLLT">HLLT</option>';
+            gps_code_options_str  += '<option value="HRYR">HRYR</option>';
+            gps_code_options_str  += '<option value="HSPN">HSPN</option>';
+            gps_code_options_str  += '<option value="HSSP">HSSP</option>';
+            gps_code_options_str  += '<option value="HSSS">HSSS</option>';
+            gps_code_options_str  += '<option value="HTDA">HTDA</option>';
+            gps_code_options_str  += '<option value="HTKJ">HTKJ</option>';
+            gps_code_options_str  += '<option value="HTZA">HTZA</option>';
+            gps_code_options_str  += '<option value="HUEN">HUEN</option>';
+            gps_code_options_str  += '<option value="KABQ">KABQ</option>';
+            gps_code_options_str  += '<option value="KACV">KACV</option>';
+            gps_code_options_str  += '<option value="KALB">KALB</option>';
+            gps_code_options_str  += '<option value="KAMA">KAMA</option>';
+            gps_code_options_str  += '<option value="KATL">KATL</option>';
+            gps_code_options_str  += '<option value="KAUS">KAUS</option>';
+            gps_code_options_str  += '<option value="KBDL">KBDL</option>';
+            gps_code_options_str  += '<option value="KBHM">KBHM</option>';
+            gps_code_options_str  += '<option value="KBIL">KBIL</option>';
+            gps_code_options_str  += '<option value="KBIS">KBIS</option>';
+            gps_code_options_str  += '<option value="KBNA">KBNA</option>';
+            gps_code_options_str  += '<option value="KBOI">KBOI</option>';
+            gps_code_options_str  += '<option value="KBOS">KBOS</option>';
+            gps_code_options_str  += '<option value="KBRO">KBRO</option>';
+            gps_code_options_str  += '<option value="KBTR">KBTR</option>';
+            gps_code_options_str  += '<option value="KBTV">KBTV</option>';
+            gps_code_options_str  += '<option value="KBUF">KBUF</option>';
+            gps_code_options_str  += '<option value="KBWI">KBWI</option>';
+            gps_code_options_str  += '<option value="KCAE">KCAE</option>';
+            gps_code_options_str  += '<option value="KCHS">KCHS</option>';
+            gps_code_options_str  += '<option value="KCLE">KCLE</option>';
+            gps_code_options_str  += '<option value="KCLT">KCLT</option>';
+            gps_code_options_str  += '<option value="KCMH">KCMH</option>';
+            gps_code_options_str  += '<option value="KCOS">KCOS</option>';
+            gps_code_options_str  += '<option value="KCPR">KCPR</option>';
+            gps_code_options_str  += '<option value="KCRP">KCRP</option>';
+            gps_code_options_str  += '<option value="KCRW">KCRW</option>';
+            gps_code_options_str  += '<option value="KCVG">KCVG</option>';
+            gps_code_options_str  += '<option value="KDAL">KDAL</option>';
+            gps_code_options_str  += '<option value="KDAY">KDAY</option>';
+            gps_code_options_str  += '<option value="KDCA">KDCA</option>';
+            gps_code_options_str  += '<option value="KDEN">KDEN</option>';
+            gps_code_options_str  += '<option value="KDET">KDET</option>';
+            gps_code_options_str  += '<option value="KDFW">KDFW</option>';
+            gps_code_options_str  += '<option value="KDSM">KDSM</option>';
+            gps_code_options_str  += '<option value="KDTW">KDTW</option>';
+            gps_code_options_str  += '<option value="KEKO">KEKO</option>';
+            gps_code_options_str  += '<option value="KELP">KELP</option>';
+            gps_code_options_str  += '<option value="KEWR">KEWR</option>';
+            gps_code_options_str  += '<option value="KFAR">KFAR</option>';
+            gps_code_options_str  += '<option value="KFAT">KFAT</option>';
+            gps_code_options_str  += '<option value="KFLG">KFLG</option>';
+            gps_code_options_str  += '<option value="KFLL">KFLL</option>';
+            gps_code_options_str  += '<option value="KFSD">KFSD</option>';
+            gps_code_options_str  += '<option value="KFTW">KFTW</option>';
+            gps_code_options_str  += '<option value="KGEG">KGEG</option>';
+            gps_code_options_str  += '<option value="KGLS">KGLS</option>';
+            gps_code_options_str  += '<option value="KGRR">KGRR</option>';
+            gps_code_options_str  += '<option value="KGSO">KGSO</option>';
+            gps_code_options_str  += '<option value="KGTF">KGTF</option>';
+            gps_code_options_str  += '<option value="KGYY">KGYY</option>';
+            gps_code_options_str  += '<option value="KHLN">KHLN</option>';
+            gps_code_options_str  += '<option value="KHSV">KHSV</option>';
+            gps_code_options_str  += '<option value="KIAD">KIAD</option>';
+            gps_code_options_str  += '<option value="KIAH">KIAH</option>';
+            gps_code_options_str  += '<option value="KICT">KICT</option>';
+            gps_code_options_str  += '<option value="KILM">KILM</option>';
+            gps_code_options_str  += '<option value="KIND">KIND</option>';
+            gps_code_options_str  += '<option value="KINL">KINL</option>';
+            gps_code_options_str  += '<option value="KIPL">KIPL</option>';
+            gps_code_options_str  += '<option value="KJAN">KJAN</option>';
+            gps_code_options_str  += '<option value="KJAX">KJAX</option>';
+            gps_code_options_str  += '<option value="KJFK">KJFK</option>';
+            gps_code_options_str  += '<option value="KLAS">KLAS</option>';
+            gps_code_options_str  += '<option value="KLAX">KLAX</option>';
+            gps_code_options_str  += '<option value="KLEX">KLEX</option>';
+            gps_code_options_str  += '<option value="KLGA">KLGA</option>';
+            gps_code_options_str  += '<option value="KLIT">KLIT</option>';
+            gps_code_options_str  += '<option value="KLRD">KLRD</option>';
+            gps_code_options_str  += '<option value="KMCI">KMCI</option>';
+            gps_code_options_str  += '<option value="KMCO">KMCO</option>';
+            gps_code_options_str  += '<option value="KMDW">KMDW</option>';
+            gps_code_options_str  += '<option value="KMEM">KMEM</option>';
+            gps_code_options_str  += '<option value="KMGM">KMGM</option>';
+            gps_code_options_str  += '<option value="KMHT">KMHT</option>';
+            gps_code_options_str  += '<option value="KMIA">KMIA</option>';
+            gps_code_options_str  += '<option value="KMKE">KMKE</option>';
+            gps_code_options_str  += '<option value="KMOT">KMOT</option>';
+            gps_code_options_str  += '<option value="KMSN">KMSN</option>';
+            gps_code_options_str  += '<option value="KMSO">KMSO</option>';
+            gps_code_options_str  += '<option value="KMSP">KMSP</option>';
+            gps_code_options_str  += '<option value="KMSY">KMSY</option>';
+            gps_code_options_str  += '<option value="KOAK">KOAK</option>';
+            gps_code_options_str  += '<option value="KOKC">KOKC</option>';
+            gps_code_options_str  += '<option value="KOMA">KOMA</option>';
+            gps_code_options_str  += '<option value="KONT">KONT</option>';
+            gps_code_options_str  += '<option value="KORD">KORD</option>';
+            gps_code_options_str  += '<option value="KORF">KORF</option>';
+            gps_code_options_str  += '<option value="KPBI">KPBI</option>';
+            gps_code_options_str  += '<option value="KPDX">KPDX</option>';
+            gps_code_options_str  += '<option value="KPHL">KPHL</option>';
+            gps_code_options_str  += '<option value="KPHX">KPHX</option>';
+            gps_code_options_str  += '<option value="KPIR">KPIR</option>';
+            gps_code_options_str  += '<option value="KPIT">KPIT</option>';
+            gps_code_options_str  += '<option value="KPVD">KPVD</option>';
+            gps_code_options_str  += '<option value="KRDU">KRDU</option>';
+            gps_code_options_str  += '<option value="KRIC">KRIC</option>';
+            gps_code_options_str  += '<option value="KRNO">KRNO</option>';
+            gps_code_options_str  += '<option value="KROC">KROC</option>';
+            gps_code_options_str  += '<option value="KRSW">KRSW</option>';
+            gps_code_options_str  += '<option value="KSAN">KSAN</option>';
+            gps_code_options_str  += '<option value="KSAT">KSAT</option>';
+            gps_code_options_str  += '<option value="KSAV">KSAV</option>';
+            gps_code_options_str  += '<option value="KSBA">KSBA</option>';
+            gps_code_options_str  += '<option value="KSDF">KSDF</option>';
+            gps_code_options_str  += '<option value="KSEA">KSEA</option>';
+            gps_code_options_str  += '<option value="KSFO">KSFO</option>';
+            gps_code_options_str  += '<option value="KSGF">KSGF</option>';
+            gps_code_options_str  += '<option value="KSHV">KSHV</option>';
+            gps_code_options_str  += '<option value="KSJC">KSJC</option>';
+            gps_code_options_str  += '<option value="KSLC">KSLC</option>';
+            gps_code_options_str  += '<option value="KSLE">KSLE</option>';
+            gps_code_options_str  += '<option value="KSMF">KSMF</option>';
+            gps_code_options_str  += '<option value="KSNA">KSNA</option>';
+            gps_code_options_str  += '<option value="KSTL">KSTL</option>';
+            gps_code_options_str  += '<option value="KSYR">KSYR</option>';
+            gps_code_options_str  += '<option value="KTLH">KTLH</option>';
+            gps_code_options_str  += '<option value="KTPA">KTPA</option>';
+            gps_code_options_str  += '<option value="KTUL">KTUL</option>';
+            gps_code_options_str  += '<option value="KTUS">KTUS</option>';
+            gps_code_options_str  += '<option value="KTYS">KTYS</option>';
+            gps_code_options_str  += '<option value="LATI">LATI</option>';
+            gps_code_options_str  += '<option value="LBBG">LBBG</option>';
+            gps_code_options_str  += '<option value="LBSF">LBSF</option>';
+            gps_code_options_str  += '<option value="LCPH">LCPH</option>';
+            gps_code_options_str  += '<option value="LCRO">LCRO</option>';
+            gps_code_options_str  += '<option value="LDZA">LDZA</option>';
+            gps_code_options_str  += '<option value="LEAL">LEAL</option>';
+            gps_code_options_str  += '<option value="LEAM">LEAM</option>';
+            gps_code_options_str  += '<option value="LEBB">LEBB</option>';
+            gps_code_options_str  += '<option value="LEBL">LEBL</option>';
+            gps_code_options_str  += '<option value="LEMD">LEMD</option>';
+            gps_code_options_str  += '<option value="LEPA">LEPA</option>';
+            gps_code_options_str  += '<option value="LEVC">LEVC</option>';
+            gps_code_options_str  += '<option value="LFBD">LFBD</option>';
+            gps_code_options_str  += '<option value="LFBO">LFBO</option>';
+            gps_code_options_str  += '<option value="LFLI">LFLI</option>';
+            gps_code_options_str  += '<option value="LFLL">LFLL</option>';
+            gps_code_options_str  += '<option value="LFMD">LFMD</option>';
+            gps_code_options_str  += '<option value="LFML">LFML</option>';
+            gps_code_options_str  += '<option value="LFOK">LFOK</option>';
+            gps_code_options_str  += '<option value="LFPG">LFPG</option>';
+            gps_code_options_str  += '<option value="LFPO">LFPO</option>';
+            gps_code_options_str  += '<option value="LFQQ">LFQQ</option>';
+            gps_code_options_str  += '<option value="LFRG">LFRG</option>';
+            gps_code_options_str  += '<option value="LFST">LFST</option>';
+            gps_code_options_str  += '<option value="LGAV">LGAV</option>';
+            gps_code_options_str  += '<option value="LGIR">LGIR</option>';
+            gps_code_options_str  += '<option value="LGKR">LGKR</option>';
+            gps_code_options_str  += '<option value="LGTS">LGTS</option>';
+            gps_code_options_str  += '<option value="LHBP">LHBP</option>';
+            gps_code_options_str  += '<option value="LICC">LICC</option>';
+            gps_code_options_str  += '<option value="LICJ">LICJ</option>';
+            gps_code_options_str  += '<option value="LIMC">LIMC</option>';
+            gps_code_options_str  += '<option value="LIME">LIME</option>';
+            gps_code_options_str  += '<option value="LIMF">LIMF</option>';
+            gps_code_options_str  += '<option value="LIMG">LIMG</option>';
+            gps_code_options_str  += '<option value="LIML">LIML</option>';
+            gps_code_options_str  += '<option value="LIPZ">LIPZ</option>';
+            gps_code_options_str  += '<option value="LIRF">LIRF</option>';
+            gps_code_options_str  += '<option value="LIRN">LIRN</option>';
+            gps_code_options_str  += '<option value="LIRP">LIRP</option>';
+            gps_code_options_str  += '<option value="LJLJ">LJLJ</option>';
+            gps_code_options_str  += '<option value="LKPR">LKPR</option>';
+            gps_code_options_str  += '<option value="LLBG">LLBG</option>';
+            gps_code_options_str  += '<option value="LMML">LMML</option>';
+            gps_code_options_str  += '<option value="LOWW">LOWW</option>';
+            gps_code_options_str  += '<option value="LPCS">LPCS</option>';
+            gps_code_options_str  += '<option value="LPMA">LPMA</option>';
+            gps_code_options_str  += '<option value="LPPD">LPPD</option>';
+            gps_code_options_str  += '<option value="LPPR">LPPR</option>';
+            gps_code_options_str  += '<option value="LPPT">LPPT</option>';
+            gps_code_options_str  += '<option value="LQSA">LQSA</option>';
+            gps_code_options_str  += '<option value="LRBS">LRBS</option>';
+            gps_code_options_str  += '<option value="LRCL">LRCL</option>';
+            gps_code_options_str  += '<option value="LSGG">LSGG</option>';
+            gps_code_options_str  += '<option value="LSZH">LSZH</option>';
+            gps_code_options_str  += '<option value="LTAC">LTAC</option>';
+            gps_code_options_str  += '<option value="LTAF">LTAF</option>';
+            gps_code_options_str  += '<option value="LTAI">LTAI</option>';
+            gps_code_options_str  += '<option value="LTAJ">LTAJ</option>';
+            gps_code_options_str  += '<option value="LTAN">LTAN</option>';
+            gps_code_options_str  += '<option value="LTBA">LTBA</option>';
+            gps_code_options_str  += '<option value="LTBJ">LTBJ</option>';
+            gps_code_options_str  += '<option value="LTBR">LTBR</option>';
+            gps_code_options_str  += '<option value="LTFJ">LTFJ</option>';
+            gps_code_options_str  += '<option value="LUKK">LUKK</option>';
+            gps_code_options_str  += '<option value="LWSK">LWSK</option>';
+            gps_code_options_str  += '<option value="LXGB">LXGB</option>';
+            gps_code_options_str  += '<option value="LYBE">LYBE</option>';
+            gps_code_options_str  += '<option value="LYPG">LYPG</option>';
+            gps_code_options_str  += '<option value="LZIB">LZIB</option>';
+            gps_code_options_str  += '<option value="MBGT">MBGT</option>';
+            gps_code_options_str  += '<option value="MDPC">MDPC</option>';
+            gps_code_options_str  += '<option value="MDSD">MDSD</option>';
+            gps_code_options_str  += '<option value="MDST">MDST</option>';
+            gps_code_options_str  += '<option value="MGGT">MGGT</option>';
+            gps_code_options_str  += '<option value="MGTK">MGTK</option>';
+            gps_code_options_str  += '<option value="MHLC">MHLC</option>';
+            gps_code_options_str  += '<option value="MHLM">MHLM</option>';
+            gps_code_options_str  += '<option value="MHTG">MHTG</option>';
+            gps_code_options_str  += '<option value="MKJP">MKJP</option>';
+            gps_code_options_str  += '<option value="MKJS">MKJS</option>';
+            gps_code_options_str  += '<option value="MMAA">MMAA</option>';
+            gps_code_options_str  += '<option value="MMAN">MMAN</option>';
+            gps_code_options_str  += '<option value="MMAS">MMAS</option>';
+            gps_code_options_str  += '<option value="MMCL">MMCL</option>';
+            gps_code_options_str  += '<option value="MMCM">MMCM</option>';
+            gps_code_options_str  += '<option value="MMCP">MMCP</option>';
+            gps_code_options_str  += '<option value="MMCS">MMCS</option>';
+            gps_code_options_str  += '<option value="MMCU">MMCU</option>';
+            gps_code_options_str  += '<option value="MMCZ">MMCZ</option>';
+            gps_code_options_str  += '<option value="MMDO">MMDO</option>';
+            gps_code_options_str  += '<option value="MMES">MMES</option>';
+            gps_code_options_str  += '<option value="MMGL">MMGL</option>';
+            gps_code_options_str  += '<option value="MMGM">MMGM</option>';
+            gps_code_options_str  += '<option value="MMHO">MMHO</option>';
+            gps_code_options_str  += '<option value="MMIO">MMIO</option>';
+            gps_code_options_str  += '<option value="MMLM">MMLM</option>';
+            gps_code_options_str  += '<option value="MMLO">MMLO</option>';
+            gps_code_options_str  += '<option value="MMLP">MMLP</option>';
+            gps_code_options_str  += '<option value="MMMA">MMMA</option>';
+            gps_code_options_str  += '<option value="MMMD">MMMD</option>';
+            gps_code_options_str  += '<option value="MMML">MMML</option>';
+            gps_code_options_str  += '<option value="MMMV">MMMV</option>';
+            gps_code_options_str  += '<option value="MMMX">MMMX</option>';
+            gps_code_options_str  += '<option value="MMMZ">MMMZ</option>';
+            gps_code_options_str  += '<option value="MMNG">MMNG</option>';
+            gps_code_options_str  += '<option value="MMNL">MMNL</option>';
+            gps_code_options_str  += '<option value="MMOX">MMOX</option>';
+            gps_code_options_str  += '<option value="MMPB">MMPB</option>';
+            gps_code_options_str  += '<option value="MMQT">MMQT</option>';
+            gps_code_options_str  += '<option value="MMSD">MMSD</option>';
+            gps_code_options_str  += '<option value="MMSP">MMSP</option>';
+            gps_code_options_str  += '<option value="MMTC">MMTC</option>';
+            gps_code_options_str  += '<option value="MMTJ">MMTJ</option>';
+            gps_code_options_str  += '<option value="MMTM">MMTM</option>';
+            gps_code_options_str  += '<option value="MMTO">MMTO</option>';
+            gps_code_options_str  += '<option value="MMTP">MMTP</option>';
+            gps_code_options_str  += '<option value="MMUN">MMUN</option>';
+            gps_code_options_str  += '<option value="MMVA">MMVA</option>';
+            gps_code_options_str  += '<option value="MMVR">MMVR</option>';
+            gps_code_options_str  += '<option value="MMZO">MMZO</option>';
+            gps_code_options_str  += '<option value="MNMG">MNMG</option>';
+            gps_code_options_str  += '<option value="MPDA">MPDA</option>';
+            gps_code_options_str  += '<option value="MPTO">MPTO</option>';
+            gps_code_options_str  += '<option value="MRPV">MRPV</option>';
+            gps_code_options_str  += '<option value="MSLP">MSLP</option>';
+            gps_code_options_str  += '<option value="MTPP">MTPP</option>';
+            gps_code_options_str  += '<option value="MUCM">MUCM</option>';
+            gps_code_options_str  += '<option value="MUCU">MUCU</option>';
+            gps_code_options_str  += '<option value="MUHA">MUHA</option>';
+            gps_code_options_str  += '<option value="MUVR">MUVR</option>';
+            gps_code_options_str  += '<option value="MWCB">MWCB</option>';
+            gps_code_options_str  += '<option value="MWCR">MWCR</option>';
+            gps_code_options_str  += '<option value="MYEF">MYEF</option>';
+            gps_code_options_str  += '<option value="MYGF">MYGF</option>';
+            gps_code_options_str  += '<option value="MYNN">MYNN</option>';
+            gps_code_options_str  += '<option value="MZBZ">MZBZ</option>';
+            gps_code_options_str  += '<option value="NCRG">NCRG</option>';
+            gps_code_options_str  += '<option value="NFFN">NFFN</option>';
+            gps_code_options_str  += '<option value="NFNA">NFNA</option>';
+            gps_code_options_str  += '<option value="NFTF">NFTF</option>';
+            gps_code_options_str  += '<option value="NFTV">NFTV</option>';
+            gps_code_options_str  += '<option value="NGFU">NGFU</option>';
+            gps_code_options_str  += '<option value="NGTA">NGTA</option>';
+            gps_code_options_str  += '<option value="NIUE">NIUE</option>';
+            gps_code_options_str  += '<option value="NSFA">NSFA</option>';
+            gps_code_options_str  += '<option value="NSTU">NSTU</option>';
+            gps_code_options_str  += '<option value="NTAA">NTAA</option>';
+            gps_code_options_str  += '<option value="NVSS">NVSS</option>';
+            gps_code_options_str  += '<option value="NVVV">NVVV</option>';
+            gps_code_options_str  += '<option value="NWWW">NWWW</option>';
+            gps_code_options_str  += '<option value="NZAA">NZAA</option>';
+            gps_code_options_str  += '<option value="NZCH">NZCH</option>';
+            gps_code_options_str  += '<option value="NZDN">NZDN</option>';
+            gps_code_options_str  += '<option value="NZHN">NZHN</option>';
+            gps_code_options_str  += '<option value="NZPM">NZPM</option>';
+            gps_code_options_str  += '<option value="NZWN">NZWN</option>';
+            gps_code_options_str  += '<option value="None">None</option>';
+            gps_code_options_str  += '<option value="OAKB">OAKB</option>';
+            gps_code_options_str  += '<option value="OBBI">OBBI</option>';
+            gps_code_options_str  += '<option value="OEDR">OEDR</option>';
+            gps_code_options_str  += '<option value="OEJN">OEJN</option>';
+            gps_code_options_str  += '<option value="OEMA">OEMA</option>';
+            gps_code_options_str  += '<option value="OERK">OERK</option>';
+            gps_code_options_str  += '<option value="OIAW">OIAW</option>';
+            gps_code_options_str  += '<option value="OICC">OICC</option>';
+            gps_code_options_str  += '<option value="OIFM">OIFM</option>';
+            gps_code_options_str  += '<option value="OIII">OIII</option>';
+            gps_code_options_str  += '<option value="OIKB">OIKB</option>';
+            gps_code_options_str  += '<option value="OIMM">OIMM</option>';
+            gps_code_options_str  += '<option value="OISS">OISS</option>';
+            gps_code_options_str  += '<option value="OITT">OITT</option>';
+            gps_code_options_str  += '<option value="OIZH">OIZH</option>';
+            gps_code_options_str  += '<option value="OJAI">OJAI</option>';
+            gps_code_options_str  += '<option value="OJAM">OJAM</option>';
+            gps_code_options_str  += '<option value="OKBK">OKBK</option>';
+            gps_code_options_str  += '<option value="OLBA">OLBA</option>';
+            gps_code_options_str  += '<option value="OMAA">OMAA</option>';
+            gps_code_options_str  += '<option value="OMDB">OMDB</option>';
+            gps_code_options_str  += '<option value="OMSJ">OMSJ</option>';
+            gps_code_options_str  += '<option value="OOMS">OOMS</option>';
+            gps_code_options_str  += '<option value="OPFA">OPFA</option>';
+            gps_code_options_str  += '<option value="OPKC">OPKC</option>';
+            gps_code_options_str  += '<option value="OPLA">OPLA</option>';
+            gps_code_options_str  += '<option value="OPMT">OPMT</option>';
+            gps_code_options_str  += '<option value="OPPS">OPPS</option>';
+            gps_code_options_str  += '<option value="OPQS">OPQS</option>';
+            gps_code_options_str  += '<option value="OPQT">OPQT</option>';
+            gps_code_options_str  += '<option value="OPRN">OPRN</option>';
+            gps_code_options_str  += '<option value="OPTU">OPTU</option>';
+            gps_code_options_str  += '<option value="ORBI">ORBI</option>';
+            gps_code_options_str  += '<option value="ORBM">ORBM</option>';
+            gps_code_options_str  += '<option value="ORMM">ORMM</option>';
+            gps_code_options_str  += '<option value="OSAP">OSAP</option>';
+            gps_code_options_str  += '<option value="OSDI">OSDI</option>';
+            gps_code_options_str  += '<option value="OSLK">OSLK</option>';
+            gps_code_options_str  += '<option value="OTBD">OTBD</option>';
+            gps_code_options_str  += '<option value="OYAA">OYAA</option>';
+            gps_code_options_str  += '<option value="OYHD">OYHD</option>';
+            gps_code_options_str  += '<option value="OYSN">OYSN</option>';
+            gps_code_options_str  += '<option value="OYTZ">OYTZ</option>';
+            gps_code_options_str  += '<option value="PABE">PABE</option>';
+            gps_code_options_str  += '<option value="PABR">PABR</option>';
+            gps_code_options_str  += '<option value="PADQ">PADQ</option>';
+            gps_code_options_str  += '<option value="PAFA">PAFA</option>';
+            gps_code_options_str  += '<option value="PAJN">PAJN</option>';
+            gps_code_options_str  += '<option value="PALH">PALH</option>';
+            gps_code_options_str  += '<option value="PAOM">PAOM</option>';
+            gps_code_options_str  += '<option value="PASC">PASC</option>';
+            gps_code_options_str  += '<option value="PASI">PASI</option>';
+            gps_code_options_str  += '<option value="PGRO">PGRO</option>';
+            gps_code_options_str  += '<option value="PGSN">PGSN</option>';
+            gps_code_options_str  += '<option value="PGUM">PGUM</option>';
+            gps_code_options_str  += '<option value="PHKO">PHKO</option>';
+            gps_code_options_str  += '<option value="PHLI">PHLI</option>';
+            gps_code_options_str  += '<option value="PHNL">PHNL</option>';
+            gps_code_options_str  += '<option value="PHOG">PHOG</option>';
+            gps_code_options_str  += '<option value="PHTO">PHTO</option>';
+            gps_code_options_str  += '<option value="PKMJ">PKMJ</option>';
+            gps_code_options_str  += '<option value="PLCH">PLCH</option>';
+            gps_code_options_str  += '<option value="PTKK">PTKK</option>';
+            gps_code_options_str  += '<option value="PTPN">PTPN</option>';
+            gps_code_options_str  += '<option value="PTRO">PTRO</option>';
+            gps_code_options_str  += '<option value="PTSA">PTSA</option>';
+            gps_code_options_str  += '<option value="PTYA">PTYA</option>';
+            gps_code_options_str  += '<option value="RCKH">RCKH</option>';
+            gps_code_options_str  += '<option value="RCMQ">RCMQ</option>';
+            gps_code_options_str  += '<option value="RCNN">RCNN</option>';
+            gps_code_options_str  += '<option value="RCTP">RCTP</option>';
+            gps_code_options_str  += '<option value="RJAA">RJAA</option>';
+            gps_code_options_str  += '<option value="RJBB">RJBB</option>';
+            gps_code_options_str  += '<option value="RJBH">RJBH</option>';
+            gps_code_options_str  += '<option value="RJCO">RJCO</option>';
+            gps_code_options_str  += '<option value="RJFF">RJFF</option>';
+            gps_code_options_str  += '<option value="RJGG">RJGG</option>';
+            gps_code_options_str  += '<option value="RJNA">RJNA</option>';
+            gps_code_options_str  += '<option value="RJOO">RJOO</option>';
+            gps_code_options_str  += '<option value="RJSS">RJSS</option>';
+            gps_code_options_str  += '<option value="RJTT">RJTT</option>';
+            gps_code_options_str  += '<option value="RKJJ">RKJJ</option>';
+            gps_code_options_str  += '<option value="RKNY">RKNY</option>';
+            gps_code_options_str  += '<option value="RKPC">RKPC</option>';
+            gps_code_options_str  += '<option value="RKPK">RKPK</option>';
+            gps_code_options_str  += '<option value="RKPU">RKPU</option>';
+            gps_code_options_str  += '<option value="RKSI">RKSI</option>';
+            gps_code_options_str  += '<option value="RKSS">RKSS</option>';
+            gps_code_options_str  += '<option value="RKTN">RKTN</option>';
+            gps_code_options_str  += '<option value="RKTU">RKTU</option>';
+            gps_code_options_str  += '<option value="RPLC">RPLC</option>';
+            gps_code_options_str  += '<option value="RPLI">RPLI</option>';
+            gps_code_options_str  += '<option value="RPLL">RPLL</option>';
+            gps_code_options_str  += '<option value="RPMD">RPMD</option>';
+            gps_code_options_str  += '<option value="RPMZ">RPMZ</option>';
+            gps_code_options_str  += '<option value="RPVM">RPVM</option>';
+            gps_code_options_str  += '<option value="SAAR">SAAR</option>';
+            gps_code_options_str  += '<option value="SACO">SACO</option>';
+            gps_code_options_str  += '<option value="SADL">SADL</option>';
+            gps_code_options_str  += '<option value="SAEZ">SAEZ</option>';
+            gps_code_options_str  += '<option value="SAME">SAME</option>';
+            gps_code_options_str  += '<option value="SANT">SANT</option>';
+            gps_code_options_str  += '<option value="SASA">SASA</option>';
+            gps_code_options_str  += '<option value="SASJ">SASJ</option>';
+            gps_code_options_str  += '<option value="SAWA">SAWA</option>';
+            gps_code_options_str  += '<option value="SAWE">SAWE</option>';
+            gps_code_options_str  += '<option value="SAWG">SAWG</option>';
+            gps_code_options_str  += '<option value="SAZM">SAZM</option>';
+            gps_code_options_str  += '<option value="SAZS">SAZS</option>';
+            gps_code_options_str  += '<option value="SBBE">SBBE</option>';
+            gps_code_options_str  += '<option value="SBBR">SBBR</option>';
+            gps_code_options_str  += '<option value="SBBV">SBBV</option>';
+            gps_code_options_str  += '<option value="SBCB">SBCB</option>';
+            gps_code_options_str  += '<option value="SBCF">SBCF</option>';
+            gps_code_options_str  += '<option value="SBCG">SBCG</option>';
+            gps_code_options_str  += '<option value="SBCR">SBCR</option>';
+            gps_code_options_str  += '<option value="SBCT">SBCT</option>';
+            gps_code_options_str  += '<option value="SBCY">SBCY</option>';
+            gps_code_options_str  += '<option value="SBEG">SBEG</option>';
+            gps_code_options_str  += '<option value="SBFI">SBFI</option>';
+            gps_code_options_str  += '<option value="SBFL">SBFL</option>';
+            gps_code_options_str  += '<option value="SBFZ">SBFZ</option>';
+            gps_code_options_str  += '<option value="SBGL">SBGL</option>';
+            gps_code_options_str  += '<option value="SBGO">SBGO</option>';
+            gps_code_options_str  += '<option value="SBGR">SBGR</option>';
+            gps_code_options_str  += '<option value="SBJP">SBJP</option>';
+            gps_code_options_str  += '<option value="SBJV">SBJV</option>';
+            gps_code_options_str  += '<option value="SBKP">SBKP</option>';
+            gps_code_options_str  += '<option value="SBMO">SBMO</option>';
+            gps_code_options_str  += '<option value="SBPA">SBPA</option>';
+            gps_code_options_str  += '<option value="SBPP">SBPP</option>';
+            gps_code_options_str  += '<option value="SBPV">SBPV</option>';
+            gps_code_options_str  += '<option value="SBRF">SBRF</option>';
+            gps_code_options_str  += '<option value="SBSL">SBSL</option>';
+            gps_code_options_str  += '<option value="SBSP">SBSP</option>';
+            gps_code_options_str  += '<option value="SBST">SBST</option>';
+            gps_code_options_str  += '<option value="SBSV">SBSV</option>';
+            gps_code_options_str  += '<option value="SBTE">SBTE</option>';
+            gps_code_options_str  += '<option value="SBTT">SBTT</option>';
+            gps_code_options_str  += '<option value="SBVT">SBVT</option>';
+            gps_code_options_str  += '<option value="SCAR">SCAR</option>';
+            gps_code_options_str  += '<option value="SCCI">SCCI</option>';
+            gps_code_options_str  += '<option value="SCDA">SCDA</option>';
+            gps_code_options_str  += '<option value="SCEL">SCEL</option>';
+            gps_code_options_str  += '<option value="SCFA">SCFA</option>';
+            gps_code_options_str  += '<option value="SCIE">SCIE</option>';
+            gps_code_options_str  += '<option value="SCIP">SCIP</option>';
+            gps_code_options_str  += '<option value="SCTE">SCTE</option>';
+            gps_code_options_str  += '<option value="SCVM">SCVM</option>';
+            gps_code_options_str  += '<option value="SEGU">SEGU</option>';
+            gps_code_options_str  += '<option value="SEMT">SEMT</option>';
+            gps_code_options_str  += '<option value="SEQU">SEQU</option>';
+            gps_code_options_str  += '<option value="SGAS">SGAS</option>';
+            gps_code_options_str  += '<option value="SGES">SGES</option>';
+            gps_code_options_str  += '<option value="SJJQ">SJJQ</option>';
+            gps_code_options_str  += '<option value="SKBG">SKBG</option>';
+            gps_code_options_str  += '<option value="SKBO">SKBO</option>';
+            gps_code_options_str  += '<option value="SKBQ">SKBQ</option>';
+            gps_code_options_str  += '<option value="SKCG">SKCG</option>';
+            gps_code_options_str  += '<option value="SKCL">SKCL</option>';
+            gps_code_options_str  += '<option value="SKRG">SKRG</option>';
+            gps_code_options_str  += '<option value="SLLP">SLLP</option>';
+            gps_code_options_str  += '<option value="SLSU">SLSU</option>';
+            gps_code_options_str  += '<option value="SLVR">SLVR</option>';
+            gps_code_options_str  += '<option value="SMJP">SMJP</option>';
+            gps_code_options_str  += '<option value="SOCA">SOCA</option>';
+            gps_code_options_str  += '<option value="SPIM">SPIM</option>';
+            gps_code_options_str  += '<option value="SPQU">SPQU</option>';
+            gps_code_options_str  += '<option value="SPZO">SPZO</option>';
+            gps_code_options_str  += '<option value="SUDU">SUDU</option>';
+            gps_code_options_str  += '<option value="SUMU">SUMU</option>';
+            gps_code_options_str  += '<option value="SUPU">SUPU</option>';
+            gps_code_options_str  += '<option value="SUSO">SUSO</option>';
+            gps_code_options_str  += '<option value="SVBM">SVBM</option>';
+            gps_code_options_str  += '<option value="SVMC">SVMC</option>';
+            gps_code_options_str  += '<option value="SVMI">SVMI</option>';
+            gps_code_options_str  += '<option value="SVVA">SVVA</option>';
+            gps_code_options_str  += '<option value="SYCJ">SYCJ</option>';
+            gps_code_options_str  += '<option value="TAPA">TAPA</option>';
+            gps_code_options_str  += '<option value="TBPB">TBPB</option>';
+            gps_code_options_str  += '<option value="TGPY">TGPY</option>';
+            gps_code_options_str  += '<option value="TJSJ">TJSJ</option>';
+            gps_code_options_str  += '<option value="TKPK">TKPK</option>';
+            gps_code_options_str  += '<option value="TLPL">TLPL</option>';
+            gps_code_options_str  += '<option value="TNCA">TNCA</option>';
+            gps_code_options_str  += '<option value="TNCC">TNCC</option>';
+            gps_code_options_str  += '<option value="TNCM">TNCM</option>';
+            gps_code_options_str  += '<option value="TUPJ">TUPJ</option>';
+            gps_code_options_str  += '<option value="TXKF">TXKF</option>';
+            gps_code_options_str  += '<option value="UAAA">UAAA</option>';
+            gps_code_options_str  += '<option value="UAAR">UAAR</option>';
+            gps_code_options_str  += '<option value="UACC">UACC</option>';
+            gps_code_options_str  += '<option value="UAFM">UAFM</option>';
+            gps_code_options_str  += '<option value="UBBB">UBBB</option>';
+            gps_code_options_str  += '<option value="UDYZ">UDYZ</option>';
+            gps_code_options_str  += '<option value="UGTB">UGTB</option>';
+            gps_code_options_str  += '<option value="UHWW">UHWW</option>';
+            gps_code_options_str  += '<option value="UIII">UIII</option>';
+            gps_code_options_str  += '<option value="UIIR">UIIR</option>';
+            gps_code_options_str  += '<option value="UKBB">UKBB</option>';
+            gps_code_options_str  += '<option value="UKCC">UKCC</option>';
+            gps_code_options_str  += '<option value="UKDD">UKDD</option>';
+            gps_code_options_str  += '<option value="UKDE">UKDE</option>';
+            gps_code_options_str  += '<option value="UKFF">UKFF</option>';
+            gps_code_options_str  += '<option value="UKHH">UKHH</option>';
+            gps_code_options_str  += '<option value="UKKK">UKKK</option>';
+            gps_code_options_str  += '<option value="UKLL">UKLL</option>';
+            gps_code_options_str  += '<option value="UKOO">UKOO</option>';
+            gps_code_options_str  += '<option value="ULAA">ULAA</option>';
+            gps_code_options_str  += '<option value="ULLI">ULLI</option>';
+            gps_code_options_str  += '<option value="ULMM">ULMM</option>';
+            gps_code_options_str  += '<option value="UMMS">UMMS</option>';
+            gps_code_options_str  += '<option value="UNBB">UNBB</option>';
+            gps_code_options_str  += '<option value="UNNT">UNNT</option>';
+            gps_code_options_str  += '<option value="UNOO">UNOO</option>';
+            gps_code_options_str  += '<option value="URRR">URRR</option>';
+            gps_code_options_str  += '<option value="URWW">URWW</option>';
+            gps_code_options_str  += '<option value="USCC">USCC</option>';
+            gps_code_options_str  += '<option value="USPP">USPP</option>';
+            gps_code_options_str  += '<option value="USRR">USRR</option>';
+            gps_code_options_str  += '<option value="USSS">USSS</option>';
+            gps_code_options_str  += '<option value="UTAA">UTAA</option>';
+            gps_code_options_str  += '<option value="UTTT">UTTT</option>';
+            gps_code_options_str  += '<option value="UUDD">UUDD</option>';
+            gps_code_options_str  += '<option value="UUEE">UUEE</option>';
+            gps_code_options_str  += '<option value="UUOO">UUOO</option>';
+            gps_code_options_str  += '<option value="UWGG">UWGG</option>';
+            gps_code_options_str  += '<option value="UWKD">UWKD</option>';
+            gps_code_options_str  += '<option value="UWSS">UWSS</option>';
+            gps_code_options_str  += '<option value="UWUU">UWUU</option>';
+            gps_code_options_str  += '<option value="UWWW">UWWW</option>';
+            gps_code_options_str  += '<option value="VAAH">VAAH</option>';
+            gps_code_options_str  += '<option value="VAAU">VAAU</option>';
+            gps_code_options_str  += '<option value="VABB">VABB</option>';
+            gps_code_options_str  += '<option value="VABO">VABO</option>';
+            gps_code_options_str  += '<option value="VABP">VABP</option>';
+            gps_code_options_str  += '<option value="VAHB">VAHB</option>';
+            gps_code_options_str  += '<option value="VAID">VAID</option>';
+            gps_code_options_str  += '<option value="VAJB">VAJB</option>';
+            gps_code_options_str  += '<option value="VANP">VANP</option>';
+            gps_code_options_str  += '<option value="VANR">VANR</option>';
+            gps_code_options_str  += '<option value="VAPO">VAPO</option>';
+            gps_code_options_str  += '<option value="VARK">VARK</option>';
+            gps_code_options_str  += '<option value="VARP">VARP</option>';
+            gps_code_options_str  += '<option value="VASL">VASL</option>';
+            gps_code_options_str  += '<option value="VASU">VASU</option>';
+            gps_code_options_str  += '<option value="VCBI">VCBI</option>';
+            gps_code_options_str  += '<option value="VDPP">VDPP</option>';
+            gps_code_options_str  += '<option value="VDSR">VDSR</option>';
+            gps_code_options_str  += '<option value="VE23">VE23</option>';
+            gps_code_options_str  += '<option value="VEBS">VEBS</option>';
+            gps_code_options_str  += '<option value="VECC">VECC</option>';
+            gps_code_options_str  += '<option value="VEGT">VEGT</option>';
+            gps_code_options_str  += '<option value="VEJS">VEJS</option>';
+            gps_code_options_str  += '<option value="VEPT">VEPT</option>';
+            gps_code_options_str  += '<option value="VERC">VERC</option>';
+            gps_code_options_str  += '<option value="VEVZ">VEVZ</option>';
+            gps_code_options_str  += '<option value="VGEG">VGEG</option>';
+            gps_code_options_str  += '<option value="VGHS">VGHS</option>';
+            gps_code_options_str  += '<option value="VGRJ">VGRJ</option>';
+            gps_code_options_str  += '<option value="VHHH">VHHH</option>';
+            gps_code_options_str  += '<option value="VIAG">VIAG</option>';
+            gps_code_options_str  += '<option value="VIAL">VIAL</option>';
+            gps_code_options_str  += '<option value="VIAR">VIAR</option>';
+            gps_code_options_str  += '<option value="VIAX">VIAX</option>';
+            gps_code_options_str  += '<option value="VIBN">VIBN</option>';
+            gps_code_options_str  += '<option value="VIBY">VIBY</option>';
+            gps_code_options_str  += '<option value="VICG">VICG</option>';
+            gps_code_options_str  += '<option value="VIDP">VIDP</option>';
+            gps_code_options_str  += '<option value="VIDX">VIDX</option>';
+            gps_code_options_str  += '<option value="VIGR">VIGR</option>';
+            gps_code_options_str  += '<option value="VIJO">VIJO</option>';
+            gps_code_options_str  += '<option value="VIJP">VIJP</option>';
+            gps_code_options_str  += '<option value="VIJU">VIJU</option>';
+            gps_code_options_str  += '<option value="VIKA">VIKA</option>';
+            gps_code_options_str  += '<option value="VIKO">VIKO</option>';
+            gps_code_options_str  += '<option value="VILD">VILD</option>';
+            gps_code_options_str  += '<option value="VILK">VILK</option>';
+            gps_code_options_str  += '<option value="VISR">VISR</option>';
+            gps_code_options_str  += '<option value="VLVT">VLVT</option>';
+            gps_code_options_str  += '<option value="VMMC">VMMC</option>';
+            gps_code_options_str  += '<option value="VNKT">VNKT</option>';
+            gps_code_options_str  += '<option value="VOBL">VOBL</option>';
+            gps_code_options_str  += '<option value="VOBZ">VOBZ</option>';
+            gps_code_options_str  += '<option value="VOCB">VOCB</option>';
+            gps_code_options_str  += '<option value="VOCI">VOCI</option>';
+            gps_code_options_str  += '<option value="VOCL">VOCL</option>';
+            gps_code_options_str  += '<option value="VOHS">VOHS</option>';
+            gps_code_options_str  += '<option value="VOMD">VOMD</option>';
+            gps_code_options_str  += '<option value="VOMM">VOMM</option>';
+            gps_code_options_str  += '<option value="VOTR">VOTR</option>';
+            gps_code_options_str  += '<option value="VOTV">VOTV</option>';
+            gps_code_options_str  += '<option value="VRMM">VRMM</option>';
+            gps_code_options_str  += '<option value="VTBD">VTBD</option>';
+            gps_code_options_str  += '<option value="VTBS">VTBS</option>';
+            gps_code_options_str  += '<option value="VTBU">VTBU</option>';
+            gps_code_options_str  += '<option value="VTCC">VTCC</option>';
+            gps_code_options_str  += '<option value="VTSP">VTSP</option>';
+            gps_code_options_str  += '<option value="VTSS">VTSS</option>';
+            gps_code_options_str  += '<option value="VVDN">VVDN</option>';
+            gps_code_options_str  += '<option value="VVNB">VVNB</option>';
+            gps_code_options_str  += '<option value="VVTS">VVTS</option>';
+            gps_code_options_str  += '<option value="VYMD">VYMD</option>';
+            gps_code_options_str  += '<option value="VYYY">VYYY</option>';
+            gps_code_options_str  += '<option value="WAAA">WAAA</option>';
+            gps_code_options_str  += '<option value="WADD">WADD</option>';
+            gps_code_options_str  += '<option value="WARA">WARA</option>';
+            gps_code_options_str  += '<option value="WARR">WARR</option>';
+            gps_code_options_str  += '<option value="WARS">WARS</option>';
+            gps_code_options_str  += '<option value="WBGG">WBGG</option>';
+            gps_code_options_str  += '<option value="WBKK">WBKK</option>';
+            gps_code_options_str  += '<option value="WBSB">WBSB</option>';
+            gps_code_options_str  += '<option value="WIAT">WIAT</option>';
+            gps_code_options_str  += '<option value="WIBB">WIBB</option>';
+            gps_code_options_str  += '<option value="WICC">WICC</option>';
+            gps_code_options_str  += '<option value="WIII">WIII</option>';
+            gps_code_options_str  += '<option value="WIMG">WIMG</option>';
+            gps_code_options_str  += '<option value="WIMM">WIMM</option>';
+            gps_code_options_str  += '<option value="WIPP">WIPP</option>';
+            gps_code_options_str  += '<option value="WMKK">WMKK</option>';
+            gps_code_options_str  += '<option value="WMKP">WMKP</option>';
+            gps_code_options_str  += '<option value="WPDL">WPDL</option>';
+            gps_code_options_str  += '<option value="WSSS">WSSS</option>';
+            gps_code_options_str  += '<option value="YBAS">YBAS</option>';
+            gps_code_options_str  += '<option value="YBBN">YBBN</option>';
+            gps_code_options_str  += '<option value="YBCG">YBCG</option>';
+            gps_code_options_str  += '<option value="YBCS">YBCS</option>';
+            gps_code_options_str  += '<option value="YBHI">YBHI</option>';
+            gps_code_options_str  += '<option value="YBRK">YBRK</option>';
+            gps_code_options_str  += '<option value="YBRM">YBRM</option>';
+            gps_code_options_str  += '<option value="YBTL">YBTL</option>';
+            gps_code_options_str  += '<option value="YMHB">YMHB</option>';
+            gps_code_options_str  += '<option value="YMML">YMML</option>';
+            gps_code_options_str  += '<option value="YPAD">YPAD</option>';
+            gps_code_options_str  += '<option value="YPCC">YPCC</option>';
+            gps_code_options_str  += '<option value="YPDN">YPDN</option>';
+            gps_code_options_str  += '<option value="YPPD">YPPD</option>';
+            gps_code_options_str  += '<option value="YPPH">YPPH</option>';
+            gps_code_options_str  += '<option value="YSCB">YSCB</option>';
+            gps_code_options_str  += '<option value="YSDU">YSDU</option>';
+            gps_code_options_str  += '<option value="YSNF">YSNF</option>';
+            gps_code_options_str  += '<option value="YSSY">YSSY</option>';
+            gps_code_options_str  += '<option value="ZBAA">ZBAA</option>';
+            gps_code_options_str  += '<option value="ZBHH">ZBHH</option>';
+            gps_code_options_str  += '<option value="ZBSJ">ZBSJ</option>';
+            gps_code_options_str  += '<option value="ZBTJ">ZBTJ</option>';
+            gps_code_options_str  += '<option value="ZBYN">ZBYN</option>';
+            gps_code_options_str  += '<option value="ZGGG">ZGGG</option>';
+            gps_code_options_str  += '<option value="ZGHA">ZGHA</option>';
+            gps_code_options_str  += '<option value="ZGKL">ZGKL</option>';
+            gps_code_options_str  += '<option value="ZGNN">ZGNN</option>';
+            gps_code_options_str  += '<option value="ZGSZ">ZGSZ</option>';
+            gps_code_options_str  += '<option value="ZHCC">ZHCC</option>';
+            gps_code_options_str  += '<option value="ZJSY">ZJSY</option>';
+            gps_code_options_str  += '<option value="ZKPY">ZKPY</option>';
+            gps_code_options_str  += '<option value="ZLLL">ZLLL</option>';
+            gps_code_options_str  += '<option value="ZLXY">ZLXY</option>';
+            gps_code_options_str  += '<option value="ZMUB">ZMUB</option>';
+            gps_code_options_str  += '<option value="ZPPP">ZPPP</option>';
+            gps_code_options_str  += '<option value="ZSAM">ZSAM</option>';
+            gps_code_options_str  += '<option value="ZSCN">ZSCN</option>';
+            gps_code_options_str  += '<option value="ZSFZ">ZSFZ</option>';
+            gps_code_options_str  += '<option value="ZSHC">ZSHC</option>';
+            gps_code_options_str  += '<option value="ZSNB">ZSNB</option>';
+            gps_code_options_str  += '<option value="ZSNJ">ZSNJ</option>';
+            gps_code_options_str  += '<option value="ZSOF">ZSOF</option>';
+            gps_code_options_str  += '<option value="ZSPD">ZSPD</option>';
+            gps_code_options_str  += '<option value="ZSQD">ZSQD</option>';
+            gps_code_options_str  += '<option value="ZSSS">ZSSS</option>';
+            gps_code_options_str  += '<option value="ZSYT">ZSYT</option>';
+            gps_code_options_str  += '<option value="ZUCK">ZUCK</option>';
+            gps_code_options_str  += '<option value="ZULS">ZULS</option>';
+            gps_code_options_str  += '<option value="ZUUU">ZUUU</option>';
+            gps_code_options_str  += '<option value="ZWSH">ZWSH</option>';
+            gps_code_options_str  += '<option value="ZWTN">ZWTN</option>';
+            gps_code_options_str  += '<option value="ZWWW">ZWWW</option>';
+            gps_code_options_str  += '<option value="ZYCC">ZYCC</option>';
+            gps_code_options_str  += '<option value="ZYHB">ZYHB</option>';
+            gps_code_options_str  += '<option value="ZYJM">ZYJM</option>';
+            gps_code_options_str  += '<option value="ZYMD">ZYMD</option>';
+            gps_code_options_str  += '<option value="ZYTL">ZYTL</option>';
+            gps_code_options_str  += '<option value="ZYTX">ZYTX</option>';
+            sel_gps_code.innerHTML = gps_code_options_str;
+            div_gps_code.appendChild(sel_gps_code);
+            var lab_gps_code = document.createElement('div');
+            lab_gps_code.innerHTML = 'gps_code';
+            lab_gps_code.className = 'filterlabel';
+            div_gps_code.appendChild(lab_gps_code);
+            var reset_gps_code = document.createElement('div');
+            reset_gps_code.innerHTML = 'clear filter';
+            reset_gps_code.className = 'filterlabel';
+            reset_gps_code.onclick = function() {
+                var options = document.getElementById("sel_gps_code").options;
+                for (var i=0; i < options.length; i++) {
+                    options[i].selected = false;
+                }
+                filterFunc();
+            };
+            div_gps_code.appendChild(reset_gps_code);
+            document.getElementById("menu").appendChild(
+                document.createElement("div"));
+            var div_type = document.createElement('div');
+            div_type.id = "div_type";
+            div_type.className= "filterselect";
+            document.getElementById("menu").appendChild(div_type);
+            sel_type = document.createElement('select');
+            sel_type.multiple = true;
+            sel_type.size = 9;
+            sel_type.id = "sel_type";
+            var type_options_str = "<option value='' unselected></option>";
+            sel_type.onchange = function(){filterFunc()};
+            type_options_str  += '<option value="major">major</option>';
+            type_options_str  += '<option value="major and military">major and military</option>';
+            type_options_str  += '<option value="mid">mid</option>';
+            type_options_str  += '<option value="mid and military">mid and military</option>';
+            type_options_str  += '<option value="military">military</option>';
+            type_options_str  += '<option value="military major">military major</option>';
+            type_options_str  += '<option value="military mid">military mid</option>';
+            type_options_str  += '<option value="small">small</option>';
+            type_options_str  += '<option value="spaceport">spaceport</option>';
+            sel_type.innerHTML = type_options_str;
+            div_type.appendChild(sel_type);
+            var lab_type = document.createElement('div');
+            lab_type.innerHTML = 'type';
+            lab_type.className = 'filterlabel';
+            div_type.appendChild(lab_type);
+            var reset_type = document.createElement('div');
+            reset_type.innerHTML = 'clear filter';
+            reset_type.className = 'filterlabel';
+            reset_type.onclick = function() {
+                var options = document.getElementById("sel_type").options;
+                for (var i=0; i < options.length; i++) {
+                    options[i].selected = false;
+                }
+                filterFunc();
+            };
+            div_type.appendChild(reset_type);
+            document.getElementById("menu").appendChild(
+                document.createElement("div"));
+            var div_location = document.createElement('div');
+            div_location.id = "div_location";
+            div_location.className= "filterselect";
+            document.getElementById("menu").appendChild(div_location);
+            sel_location = document.createElement('select');
+            sel_location.multiple = true;
+            sel_location.size = 6;
+            sel_location.id = "sel_location";
+            var location_options_str = "<option value='' unselected></option>";
+            sel_location.onchange = function(){filterFunc()};
+            location_options_str  += '<option value="approximate">approximate</option>';
+            location_options_str  += '<option value="freight">freight</option>';
+            location_options_str  += '<option value="parking">parking</option>';
+            location_options_str  += '<option value="ramp">ramp</option>';
+            location_options_str  += '<option value="runway">runway</option>';
+            location_options_str  += '<option value="terminal">terminal</option>';
+            sel_location.innerHTML = location_options_str;
+            div_location.appendChild(sel_location);
+            var lab_location = document.createElement('div');
+            lab_location.innerHTML = 'location';
+            lab_location.className = 'filterlabel';
+            div_location.appendChild(lab_location);
+            var reset_location = document.createElement('div');
+            reset_location.innerHTML = 'clear filter';
+            reset_location.className = 'filterlabel';
+            reset_location.onclick = function() {
+                var options = document.getElementById("sel_location").options;
+                for (var i=0; i < options.length; i++) {
+                    options[i].selected = false;
+                }
+                filterFunc();
+            };
+            div_location.appendChild(reset_location);
+        </script>
+    </body>
+</html>
